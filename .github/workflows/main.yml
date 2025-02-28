@@ -20,8 +20,8 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'  # Используем последнюю версию Flutter
-
+          flutter-version: '3.19.1'  # Или укажи нужную версию
+          
       - name: Enable Windows support
         run: flutter config --enable-windows-desktop
 
