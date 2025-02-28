@@ -3,25 +3,25 @@ name: Build Windows EXE
 on:
   push:
     branches:
-      - main  # Запускать при каждом коммите в main
+      - main
     tags:
-      - 'v*'  # Запускать при создании тегов вида v1.0.0
+      - 'v*'
   pull_request:
     branches:
       - main
 
 jobs:
   build:
-    runs-on: windows-latest  # Запуск на сервере с Windows
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v3
         with:
-          flutter-version: '3.27.1'  # Или укажи нужную версию
-          
+          flutter-version: '3.27.1'
+
       - name: Enable Windows support
         run: flutter config --enable-windows-desktop
 
@@ -29,18 +29,21 @@ jobs:
         run: flutter pub get
 
       - name: Build Windows EXE
-        run: flutter build windows
+        run: flutter build windows --verbose
+
+      - name: Debug Build Directory
+        run: ls -R build/windows/runner/
 
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: build/windows/runner/Release/
+          path: build/windows/x64/runner/Release/
 
       - name: Release EXE
-        if: startsWith(github.ref, 'refs/tags/v')  # Выполнять только для тегов v*
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: build/windows/runner/Release/*.exe
+          files: build/windows/x64/runner/Release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
