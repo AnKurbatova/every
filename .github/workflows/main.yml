@@ -28,11 +28,14 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Check Flutter Configuration
+        run: flutter doctor -v
+
       - name: Build Windows EXE
         run: flutter build windows --verbose
 
-      - name: Debug Build Directory
-        run: ls -R build/windows/runner/
+      - name: Check Build Directory
+        run: ls -R build/windows/
 
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
